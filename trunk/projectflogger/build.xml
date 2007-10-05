@@ -8,6 +8,7 @@
 
 	<target name="compile" depends="clean">
 		<mkdir dir="${classes}"/>
+		<copy file="${source}/flogger.properties" todir="${classes}"/>
 		<javac srcdir="${source}" destdir="${classes}"/>
 	</target>
 
@@ -20,7 +21,7 @@
 		<mkdir dir="${dist}"/>
 		<jar destfile="${dist}/${jardestfile}" basedir="${classes}">
 		<manifest>
-			<attribute name="Main-Class" value="flogger.Example"/>
+			<attribute name="Main-Class" value="flogger.example.Example"/>
 		</manifest>
 		</jar>
 	</target>
