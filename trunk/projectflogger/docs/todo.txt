@@ -1,0 +1,27 @@
+flogger todo list
+
+topics
+	pattern matching
+		needed?
+class name
+enter/exit list method
+	optional method signature
+output hot link (properly format stack traces for IDE)
+
+sampler
+
+property file
+	filename pattern
+	current log level
+
+print pattern
+	extensions
+optionally print stack traces
+
+properties for "ASCII art" symbols
+	enter
+	exit
+	exception
+	normal
+
+define levels via the properties file
