@@ -10,6 +10,8 @@ package flogger.example;
 
 
 import static flogger.Flogger.*;
+
+import flogger.Config;
 import flogger.Level;
 import flogger.Flogger;
 
@@ -17,6 +19,11 @@ public class Example {
 
 	public static void main( String[] args )
 	{
+		Config config = Config.getInstance();
+		config.setShowConfig( true );
+		
+		String filename = "example-flogger.properties";
+		config.setPropertiesFileName( filename );
 		INFO.log( "howdy" );
 		
 		Flogger info = Flogger.INFO;

@@ -11,8 +11,11 @@ package flogger;
  */
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,19 +43,71 @@ public class Config
 	
 
 	public final static String PROPERTIES_FILENAME;
+	public final static String DEFAULT_PROPERTIES_FILENAME;
 	static 
 	{
 		Package p = Config.class.getPackage();
-		PROPERTIES_FILENAME = p.getName() + ".properties";
+		String name = p.getName();
+		PROPERTIES_FILENAME = name + ".properties";
+		DEFAULT_PROPERTIES_FILENAME = "default-" + name + ".properties";
 	}
 	
 	private Properties _props = null;
 	
+	/**
+	 * Lazily retrieves Flogger's properties in the following order:
+	 * <ul>
+	 * <li>"flogger.properties" System (runtime) property</li>
+	 * <li>tries to find file from Config.getPropertiesFileName() in classpath</li>
+	 * <li>tries to find file named "flogger.properties" in classpath</li>
+	 * <li>as a last resort, loads "default-flogger.properties" from distributed jar</li>
+	 * </ul>
+	 * @return
+	 */
 	public Properties getProperties()
 	{
 		synchronized( _lock )
 		{
-			InputStream in = ClassLoader.getSystemResourceAsStream( PROPERTIES_FILENAME );
+			InputStream in = null;
+			
+			if( in == null )
+			{
+				String filename = System.getProperty( "flogger.properties" );
+				if( filename != null )
+				{
+					in = ClassLoader.getSystemResourceAsStream( filename );
+				}
+			}
+			if( in == null )
+			{
+				String filename = getPropertiesFileName();
+				if( filename != null )
+				{
+					in = ClassLoader.getSystemResourceAsStream( filename );
+				}
+//				URL url = getPropertiesURL();
+//				if( url != null )
+//				{
+//					try 
+//					{
+//						in = url.openStream();
+//					} 
+//					catch( IOException e )
+//					{
+//						e.printStackTrace( System.err );
+//					}
+//				}
+			}
+			if( in == null )
+			{
+				in = ClassLoader.getSystemResourceAsStream( PROPERTIES_FILENAME );
+			}
+			if( in == null )
+			{
+				// TODO: Do some sanity check to make sure "default-flogger.properties" comes from
+				// distribution jar
+				in = ClassLoader.getSystemResourceAsStream( DEFAULT_PROPERTIES_FILENAME );
+			}
 			try
 			{
 				if( in != null )
@@ -64,11 +119,63 @@ public class Config
 			catch( IOException e ) 
 			{
 				_props = null;
-				e.printStackTrace();
+				e.printStackTrace( System.err );
 			}
 		}
 		return _props;
 	}
+	
+//	private URL _propertiesURL = null;
+//	public void setPropertiesURL( URL propertiesURL )
+//	{
+////		if( propertiesURL == null )
+////		{
+////			throw new NullParameterException( "url" );
+////		}
+//		_propertiesURL = propertiesURL;
+//	}
+//
+//	public URL getPropertiesURL()
+//	{
+//		return _propertiesURL;
+//	}
+
+	
+//	public void setPropertiesFile( File file )
+//	{
+//		URL url = null;
+//		if( file != null )
+//		{
+//			try 
+//			{
+//				url = file.toURL();
+//			} 
+//			catch( MalformedURLException e ) 
+//			{
+//				e.printStackTrace( System.err );
+//			}
+//		}
+//		setPropertiesURL( url );
+//	}
+	
+	private String _propertiesFileName = null;
+	public void setPropertiesFileName( String propertiesFileName )
+	{
+		clearPropertiesSources();
+		_propertiesFileName = propertiesFileName;
+		
+	}
+	
+	public String getPropertiesFileName()
+	{
+		return _propertiesFileName;
+	}
+	
+	public void clearPropertiesSources()
+	{
+		_propertiesFileName = null;
+	}
+	
 	
 	// null value means "undefined"
 	private Boolean _disabled = null;
@@ -286,5 +393,17 @@ public class Config
 			_topicMap.put( name, topic );
 		}
 		return topic;
+	}
+	
+	private boolean _showConfig = false;
+	
+	public void setShowConfig( boolean showConfig )
+	{
+		_showConfig = showConfig;
+	}
+	
+	public boolean getShowConfig()
+	{
+		return _showConfig;
 	}
 }

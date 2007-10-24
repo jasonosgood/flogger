@@ -25,3 +25,15 @@ properties for "ASCII art" symbols
 	normal
 
 define levels via the properties file
+
+multiple configs (?)
+showconfig
+automatic config reload with retry interval
+
+class name template keywords
+	longclass  - apple.banana.Cherry
+	abbrclass - a.b.Cherry
+	shortclass - Cherry
+
+
+Config.getPropertiesURL or .getPropertiesURI?

@@ -182,4 +182,14 @@ extends
 		}
 	}
 	
+	public void showConfig()
+		throws IOException
+	{
+		super.showConfig();
+		String name = getName();
+		append( name + "|filename=" + getFileName() );
+		append( name + "|extension=" + getExtension() );
+		append( name + "|directory=" + getDirectory() );
+	}
+	
 }
