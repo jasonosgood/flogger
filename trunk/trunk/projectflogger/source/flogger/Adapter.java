@@ -163,6 +163,7 @@ public abstract class
 	
 	protected synchronized void event( String symbol, Flogger logger, Throwable throwable, String message )
 	{
+		// TODO: Is this check necessary?
 		// Bail out if logging is disabled
 		if( logger.getLevel().getValue() > getLevel().getValue() )
 		{
@@ -232,6 +233,17 @@ public abstract class
 		{
 			e.printStackTrace( System.err );
 		}
+	}
+	
+	public void showConfig()
+		throws IOException
+	{
+		String name = getName();
+		append( name + "|adapter=" + getDescription() );
+		append( name + "|class=" + getClass().getName() );
+		append( name + "|level=" + getLevel() );
+		append( name + "|stacktrace=" + getStackTrace() );
+		append( name + "|template=" + getTemplate() );
 	}
 	
 }

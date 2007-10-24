@@ -8,7 +8,9 @@ package flogger;
  * <Appropriate LGPL blurb goes here.>
  */
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class 
 	Topic 
@@ -111,4 +113,60 @@ public class
 		}
 	}
 
+	/**
+	 * Outputs Topic's configuration in properties file syntax.
+	 *
+	 */
+	void showConfig()
+	{
+		showConfig( "Flogger Config" );
+		showConfig( "" );
+		String name = getName();
+		showConfig( name + "|topic=" + getDescription() );
+		showConfig( name + "|match=" + getMatch() );
+		showConfig( name + "|level=" + getLevel() );
+		StringBuilder sb = new StringBuilder( name );
+		sb.append( "|adapters=" );
+		Iterator<Adapter> i = _adapters.iterator();
+		if( i.hasNext() )
+		{
+			sb.append( i.next().getName() );
+			
+		}
+		while( i.hasNext() )
+		{
+			sb.append( ", " );
+			sb.append( i.next().getName() );
+		}
+		showConfig( sb.toString() );
+		for( Adapter adapter : _adapters )
+		{
+			try
+			{
+				adapter.append( "" );
+				adapter.showConfig();
+			}
+			catch( IOException e ) 
+			{
+				e.printStackTrace( System.err );
+			}
+			
+		}
+		showConfig( "" );
+	}
+
+	void showConfig( String message )
+	{
+		for( Adapter adapter : _adapters )
+		{
+			try 
+			{
+				adapter.append( message );
+			} 
+			catch( IOException e ) 
+			{
+				e.printStackTrace( System.err );
+			}
+		}
+	}
 }

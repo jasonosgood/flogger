@@ -81,6 +81,7 @@ public class Flogger
 		}
 		_topicName = topicName;
 		_topic = null;
+		clearFloggerProxy();
 	}
 	
 	public synchronized String getTopicName()
@@ -98,6 +99,7 @@ public class Flogger
 		}
 
 		_topic = topic;
+		clearFloggerProxy();
 	}
 
 	public synchronized Topic getTopic() 
@@ -107,6 +109,10 @@ public class Flogger
 			Config config = Config.getInstance();
 			String topicName = getTopicName();
 			_topic = config.getTopic( topicName );
+			if( config.getShowConfig() )
+			{
+				_topic.showConfig();
+			}
 		}
 		return _topic; 
 	}
@@ -119,7 +125,8 @@ public class Flogger
 		{
 			throw new NullParameterException( "level" );
 		}
-		_level = level; 
+		_level = level;
+		clearFloggerProxy();
 	}
 	
 	public synchronized Level getLevel() 
@@ -141,7 +148,7 @@ public class Flogger
 		return _shortClass;
 	}
 	
-	protected boolean disabled()
+	protected synchronized boolean disabled()
 	{
 		if( Config.getInstance().disabled() )
 		{
@@ -151,141 +158,97 @@ public class Flogger
 		return higherLevel;
 	}
 	
-	public synchronized void enter( Object message )
+	private ProxyFlogger _floggerProxy = null;
+	private synchronized ProxyFlogger getFloggerProxy()
 	{
-		if( disabled() ) return;
-		if( message != null )
+		if( _floggerProxy == null )
 		{
-			message = message.toString();
+			if( disabled() )
+			{
+				_floggerProxy = new ProxyFlogger();
+			}
+			else
+			{
+				_floggerProxy = new RealFlogger();
+			}
 		}
-		getTopic().enter( this, (String) message );
+		return _floggerProxy;
 	}
 	
-	public synchronized void exit( Object message )
+	synchronized void clearFloggerProxy()
 	{
-		if( disabled() ) return;
-		if( message != null )
-		{
-			message = message.toString();
-		}
-		getTopic().exit( this, (String) message );
+		_floggerProxy = null;
+	}
+	
+	public void enter( Object message )
+	{
+		getFloggerProxy().enter( this, message );
+	}
+	
+	public void exit( Object message )
+	{
+		getFloggerProxy().exit( this, (String) message );
 	}
 
-	public synchronized void log()
+	public void log()
 	{
-		if( disabled() ) return;
-		getTopic().log( this, null, null );
+		getFloggerProxy().log( this );
 	}
 	
-	public synchronized void log( Object message )
+	public void log( Object message )
 	{
-		if( disabled() ) return;
-		if( message != null )
-		{
-			message = message.toString();
-		}
-		getTopic().log( this, null, (String) message );
+		getFloggerProxy().log( this, message );
 	}
 	
-	public synchronized void log( String template, Object a )
+	public void log( String template, Object a )
 	{
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a );
-		getTopic().log( this, null, message );
+		getFloggerProxy().log( this, template, a );
 	}
 	
-	public synchronized void log( String template, Object a, Object b )
+	public void log( String template, Object a, Object b )
 	{
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a, b );
-		getTopic().log( this, null, message );
+		getFloggerProxy().log( this, template, a, b );
 	}
 	
-	public synchronized void log( String template, Object a, Object b, Object c )
+	public void log( String template, Object a, Object b, Object c )
 	{
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a, b, c );
-		getTopic().log( this, null, message );
+		getFloggerProxy().log( this, template, a, b, c );
 	}
 	
-	public synchronized void log( String template, Object... a )
+	public void log( String template, Object... a )
 	{
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a );
-		getTopic().log( this, null, message );
+		getFloggerProxy().log( this, template, a );
 	}
 	
-	public synchronized void log( Throwable throwable )
+	public void log( Throwable throwable )
 	{
-		checkThrowable( throwable );
-		if( disabled() ) return;
-		getTopic().log( this, throwable, null );
+		getFloggerProxy().log( this, throwable );
 	}
 	
-	public synchronized void log( Throwable throwable, Object message )
+	public void log( Throwable throwable, Object message )
 	{
-		checkThrowable( throwable );
-		if( disabled() ) return;
-		if( message != null )
-		{
-			message = message.toString();
-		}
-		getTopic().log( this, throwable, (String) message );
+		getFloggerProxy().log( this, throwable, message );
 	}
 	
-	public synchronized void log( Throwable throwable, String template, Object a )
+	public void log( Throwable throwable, String template, Object a )
 	{
-		checkThrowable( throwable );
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a );
-		getTopic().log( this, throwable, message );
+		getFloggerProxy().log( this, throwable, template, a );
 	}
 	
-	public synchronized void log( Throwable throwable, String template, Object a, Object b )
+	public void log( Throwable throwable, String template, Object a, Object b )
 	{
-		checkThrowable( throwable );
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a, b );
-		getTopic().log( this, throwable, message );
+		getFloggerProxy().log( this, throwable, template, a, b );
 	}
 	
-	public synchronized void log( Throwable throwable, String template, Object a, Object b, Object c )
+	public void log( Throwable throwable, String template, Object a, Object b, Object c )
 	{
-		checkThrowable( throwable );
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a, b, c );
-		getTopic().log( this, throwable, message );
+		getFloggerProxy().log( this, throwable, template, a, b, c );
 	}
 	
-	public synchronized void log( Throwable throwable, String template, Object... a )
+	public void log( Throwable throwable, String template, Object... a )
 	{
-		checkThrowable( throwable );
-		checkTemplate( template );
-		if( disabled() ) return;
-		String message = String.format( template, a );
-		getTopic().log( this, throwable, message );
-	}
-	
-	protected void checkTemplate( String template )
-	{
-		if( template == null )
-		{
-			throw new NullParameterException( "template" );
-		}
-	}
-	
-	protected void checkThrowable( Throwable throwable )
-	{
-		if( throwable == null )
-		{
-			throw new NullParameterException( "throwable" );
-		}
+		getFloggerProxy().log( this, throwable, template, a );
 	}
 }
+
+// End of Flogger.java
