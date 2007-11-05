@@ -12,7 +12,7 @@ package flogger;
 
 /**
  * Does nothing. Implementation of the Null Object design pattern. Permits JVM to optimize
- * away all calls to Flogger (true?).
+ * away all calls to parent Flogger. (true?)
  * 
  */
 
@@ -44,22 +44,22 @@ class
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, String template, Object a )
+	public synchronized void log( Flogger flogger, String format, Object a )
 	{
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, String template, Object a, Object b )
+	public synchronized void log( Flogger flogger, String format, Object a, Object b )
 	{
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, String template, Object a, Object b, Object c )
+	public synchronized void log( Flogger flogger, String format, Object a, Object b, Object c )
 	{
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, String template, Object... a )
+	public synchronized void log( Flogger flogger, String format, Object... a )
 	{
 		// Does nothing
 	}
@@ -74,22 +74,22 @@ class
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, Throwable throwable, String template, Object a )
+	public synchronized void log( Flogger flogger, Throwable throwable, String format, Object a )
 	{
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, Throwable throwable, String template, Object a, Object b )
+	public synchronized void log( Flogger flogger, Throwable throwable, String format, Object a, Object b )
 	{
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, Throwable throwable, String template, Object a, Object b, Object c )
+	public synchronized void log( Flogger flogger, Throwable throwable, String format, Object a, Object b, Object c )
 	{
 		// Does nothing
 	}
 	
-	public synchronized void log( Flogger flogger, Throwable throwable, String template, Object... a )
+	public synchronized void log( Flogger flogger, Throwable throwable, String format, Object... a )
 	{
 		// Does nothing
 	}	
