@@ -1,6 +1,6 @@
 package flogger;
 
-/**
+/*
  * Project Flogger
  * 
  * Hosted at http://code.google.com/p/projectflogger/
@@ -9,7 +9,9 @@ package flogger;
  * 
  * <Appropriate LGPL blurb goes here.>
  */
-
+/**
+ * 
+ */
 
 public class Flogger
 {
@@ -190,11 +192,20 @@ public class Flogger
 		getFloggerProxy().exit( this, (String) message );
 	}
 
+	/**
+	 * Empty log message.
+	 *
+	 */
 	public void log()
 	{
 		getFloggerProxy().log( this );
 	}
 	
+	/**
+	 * Simple log message. Will not call toString() method on message parameter unless logging is enabled.
+	 *  
+	 * @param message
+	 */
 	public void log( Object message )
 	{
 		getFloggerProxy().log( this, message );
@@ -205,19 +216,19 @@ public class Flogger
 		getFloggerProxy().log( this, template, a );
 	}
 	
-	public void log( String template, Object a, Object b )
+	public void log( String format, Object a, Object b )
 	{
-		getFloggerProxy().log( this, template, a, b );
+		getFloggerProxy().log( this, format, a, b );
 	}
 	
-	public void log( String template, Object a, Object b, Object c )
+	public void log( String format, Object a, Object b, Object c )
 	{
-		getFloggerProxy().log( this, template, a, b, c );
+		getFloggerProxy().log( this, format, a, b, c );
 	}
 	
-	public void log( String template, Object... a )
+	public void log( String format, Object... a )
 	{
-		getFloggerProxy().log( this, template, a );
+		getFloggerProxy().log( this, format, a );
 	}
 	
 	public void log( Throwable throwable )
@@ -225,29 +236,34 @@ public class Flogger
 		getFloggerProxy().log( this, throwable );
 	}
 	
+	/**
+	 * Simple log message with exception. Will not call toString() method on message parameter unless logging is enabled.
+	 *  
+	 * @param message
+	 */
 	public void log( Throwable throwable, Object message )
 	{
 		getFloggerProxy().log( this, throwable, message );
 	}
 	
-	public void log( Throwable throwable, String template, Object a )
+	public void log( Throwable throwable, String format, Object a )
 	{
-		getFloggerProxy().log( this, throwable, template, a );
+		getFloggerProxy().log( this, throwable, format, a );
 	}
 	
-	public void log( Throwable throwable, String template, Object a, Object b )
+	public void log( Throwable throwable, String format, Object a, Object b )
 	{
-		getFloggerProxy().log( this, throwable, template, a, b );
+		getFloggerProxy().log( this, throwable, format, a, b );
 	}
 	
-	public void log( Throwable throwable, String template, Object a, Object b, Object c )
+	public void log( Throwable throwable, String format, Object a, Object b, Object c )
 	{
-		getFloggerProxy().log( this, throwable, template, a, b, c );
+		getFloggerProxy().log( this, throwable, format, a, b, c );
 	}
 	
-	public void log( Throwable throwable, String template, Object... a )
+	public void log( Throwable throwable, String format, Object... a )
 	{
-		getFloggerProxy().log( this, throwable, template, a );
+		getFloggerProxy().log( this, throwable, format, a );
 	}
 }
 

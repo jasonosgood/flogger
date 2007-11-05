@@ -61,12 +61,12 @@ public abstract class
 				setStackTrace( stackTrace );
 			}
 		}
-		if( props.containsKey( "template" ))
+		if( props.containsKey( "layout" ))
 		{
-			String temp = props.get( "template" ).trim();
+			String temp = props.get( "layout" ).trim();
 			if( temp.length() > 0 )
 			{
-				setTemplate( temp );
+				setLayout( temp );
 			}
 		}
 	}
@@ -127,36 +127,36 @@ public abstract class
 		return _stackTrace; 
 	}
 	
-	public final static String DEFAULT_TEMPLATE = "{timestamp}tD {timestamp}tT|{symbol}s|{level}s|{thread}s|{shortclass}s|{message}s";
+	public final static String DEFAULT_LAYOUT = "{timestamp}tD {timestamp}tT|{symbol}s|{level}s|{thread}s|{shortclass}s|{message}s";
 //	public final static String DEFAULT_DAILY_DIRECTORY = ".";
 //	public final static String DEFAULT_DAILY_PATTERN = "yyyy-MM-dd";
 //	public final static String DEFAULT_DAILY_SUFFIX = "log";
 	
 
-	private String _template = DEFAULT_TEMPLATE;
+	private String _layout = DEFAULT_LAYOUT;
 	
-	// TODO: Validate template (syntax)
-	public void setTemplate( String template )
+	// TODO: Validate layout (syntax)
+	public void setLayout( String layout )
 	{
-		if( template == null )
+		if( layout == null )
 		{
-			throw new NullParameterException( "template" );
+			throw new NullParameterException( "layout" );
 		}
-		_template = template;
+		_layout = layout;
 	}
 	
-	public String getTemplate() 
+	public String getLayout() 
 	{
-		return _template;
+		return _layout;
 	}
 	
-	private String replace( String template, String param, int nth ) 
+	private String replace( String layout, String param, int nth ) 
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append( '%' );
 		sb.append( nth++ );
 		sb.append( '$' );
-		return template.replace( param, sb.toString() );
+		return layout.replace( param, sb.toString() );
 	}
 	
 	private ArrayList<Object> _values = new ArrayList<Object>();
@@ -170,52 +170,52 @@ public abstract class
 			return;
 		}
 
-		String template = getTemplate();
+		String layout = getLayout();
 		_values.clear();
 		int nth = 1;
 
-		if( template.contains( "{timestamp}" ))
+		if( layout.contains( "{timestamp}" ))
 		{
-			template = replace( template, "{timestamp}", nth++ );
+			layout = replace( layout, "{timestamp}", nth++ );
 			_values.add( new Date() );
 		}
-		if( template.contains( "{thread}" ))
+		if( layout.contains( "{thread}" ))
 		{
-			template = replace( template, "{thread}", nth++ );
+			layout = replace( layout, "{thread}", nth++ );
 			String thread = Thread.currentThread().getName();
 			_values.add( thread );
 		}
-		if( template.contains( "{level}" ))
+		if( layout.contains( "{level}" ))
 		{
-			template = replace( template, "{level}", nth++ );
+			layout = replace( layout, "{level}", nth++ );
 			String level = logger.getLevel().toString();
 			_values.add( level );
 		}
-		if( template.contains( "{longclass}" ))
+		if( layout.contains( "{longclass}" ))
 		{
-			template = replace( template, "{longclass}", nth++ );
+			layout = replace( layout, "{longclass}", nth++ );
 			String longClass = logger.getLongClass();
 			_values.add( longClass );
 		}
-		if( template.contains( "{shortclass}" ))
+		if( layout.contains( "{shortclass}" ))
 		{
-			template = replace( template, "{shortclass}", nth++ );
+			layout = replace( layout, "{shortclass}", nth++ );
 			String shortClass = logger.getShortClass();
 			_values.add( shortClass );
 		}
-		if( template.contains( "{message}" ))
+		if( layout.contains( "{message}" ))
 		{
-			template = replace( template, "{message}", nth++ );
+			layout = replace( layout, "{message}", nth++ );
 			_values.add( message == null ? "" : message );
 		}
-		if( template.contains( "{symbol}" ))
+		if( layout.contains( "{symbol}" ))
 		{
-			template = replace( template, "{symbol}", nth++ );
+			layout = replace( layout, "{symbol}", nth++ );
 			_values.add( symbol );
 		}
 		
 		Object args[] = _values.toArray();
-		String result = String.format( template, args );
+		String result = String.format( layout, args );
 
 		try
 		{
@@ -243,7 +243,7 @@ public abstract class
 		append( name + "|class=" + getClass().getName() );
 		append( name + "|level=" + getLevel() );
 		append( name + "|stacktrace=" + getStackTrace() );
-		append( name + "|template=" + getTemplate() );
+		append( name + "|layout=" + getLayout() );
 	}
 	
 }
